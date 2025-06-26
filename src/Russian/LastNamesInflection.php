@@ -172,6 +172,32 @@ class LastNamesInflection extends \morphos\NamesInflection implements Cases
                     ];
                 }
 
+                if(in_array(S::slice($name,-3),['вой'],true)){
+                    $last_consonant = S::slice($name, -4, -3);
+                    $last_sonority = (RussianLanguage::isSonorousConsonant($last_consonant) && $last_consonant !== 'н') || $last_consonant === 'ц';
+                    if ($last_sonority) {
+                        $prefix = S::name(S::slice($name, 0, -1));
+                        return [
+                            static::IMENIT  => S::name($name),
+                            static::RODIT   => $prefix . 'я',
+                            static::DAT     => $prefix . 'ю',
+                            static::VINIT   => $prefix . 'я',
+                            static::TVORIT  => $prefix . 'ем',
+                            static::PREDLOJ => $prefix . (in_array(S::slice($name, -2), ['ой', 'ей']) ? 'е' : 'и'),
+                        ];
+                    } else {
+                        $prefix = S::name(S::slice($name, 0, -2));
+                        return [
+                            static::IMENIT  => S::name($name),
+                            static::RODIT   => $prefix .  'ого',
+                            static::DAT     => $prefix . 'ому',
+                            static::VINIT   => $prefix . 'ого',
+                            static::TVORIT  => $prefix . 'ым',
+                            static::PREDLOJ => $prefix . 'ом',
+                        ];
+                    }
+                }
+
                 // Толстой / Цой / Лукелий
                 // Толстого / Цоя / Лукелия
                 // Толстому / Цою / Лукелию
